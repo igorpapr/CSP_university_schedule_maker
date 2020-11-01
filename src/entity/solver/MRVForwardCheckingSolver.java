@@ -4,7 +4,9 @@ import entity.ScheduleSlot;
 import entity.UniversityClass;
 import entity.constraints.AbstractConstraint;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 //Minimum remaining values solver with forward checking
 public class MRVForwardCheckingSolver extends ScheduleSolver{
@@ -17,8 +19,16 @@ public class MRVForwardCheckingSolver extends ScheduleSolver{
 	@Override
 	public void solve() {
 		for (int i = 0; i < variables.size(); i++){
-			//tbd
+			UniversityClass item = variables.get(i);
+			assignValue(item);
 		}
+	}
+
+	protected int findWithMinimumRemainingValues(){
+		 return this.variables.stream()
+				.min(Comparator.comparingInt(o -> o.getAvailableSlots().size()))
+				.map(el -> variables.indexOf(el))
+				.orElse(-1);
 	}
 
 	@Override
