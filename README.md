@@ -11,4 +11,4 @@ Heuristics to be used:
 - forward checking
 - constraint propagation
 
-Made by Ihor Paprotskyi and Oleksii Lozovoi
+Made by Ihor Paprotskyi, Oleksii Lozovoi and Anton Butenko
