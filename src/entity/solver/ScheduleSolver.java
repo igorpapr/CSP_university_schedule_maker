@@ -1,3 +1,5 @@
+package entity.solver;
+
 import entity.UniversityClass;
 import entity.constraints.AbstractConstraint;
 
