@@ -26,7 +26,7 @@ public class UniversityClass {
 		this.teacher = teacher;
 		this.students.addAll(students);
 		this.neighbors = new LinkedList<>();
-		this.availableSlots = new LinkedList<>();
+		this.availableSlots = new ArrayList<>();
 	}
 
 	public List<ScheduleSlot> getAvailableSlots() {
@@ -102,6 +102,10 @@ public class UniversityClass {
 			return this.scheduleSlot.classroom;
 		}
 		return null;
+	}
+
+	public boolean isAssigned(){
+		return this.scheduleSlot != null;
 	}
 
 	@Override
