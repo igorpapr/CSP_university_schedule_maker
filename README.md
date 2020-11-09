@@ -3,12 +3,12 @@
 
 University lab: generate university schedule considering this task as a CSP problem.
 
-Heuristics to be used:
+Implemented:
 
 - Minimum Remaining Values
-- power heuristics
-- heuristic with the lowest limiting value
-- forward checking
-- constraint propagation
+- Power Heuristics
+- Least Constraining Value heuristics
+- Forward checking
+- Constraint propagation
 
 Made by Ihor Paprotskyi, Oleksii Lozovoi and Anton Butenko
