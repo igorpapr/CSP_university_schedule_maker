@@ -76,6 +76,7 @@ public abstract class ScheduleSolver {
 	 */
 	protected int findIndexOfNextUnassignedVariableToBeProcessed(){
 		List<UniversityClass> unassigned = variables.stream().filter(v -> !v.isAssigned()).collect(Collectors.toList());
+		//getting random unassigned variable
 		UniversityClass item = unassigned.get(random.nextInt(unassigned.size()));
 
 		return this.variables.stream()
@@ -99,4 +100,10 @@ public abstract class ScheduleSolver {
 		return constraintsFailed;
 	}
 
+	/**
+	 * Picks value to be assigned to the variable from the list of available values
+	 * @param variable
+	 * @return found value
+	 */
+	protected abstract ScheduleSlot getValueToBeAssigned(UniversityClass variable);
 }

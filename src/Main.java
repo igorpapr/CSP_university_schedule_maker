@@ -40,7 +40,7 @@ public class Main {
 		constraints.add(new NotHaveCommonStudentsConstraint());
 		constraints.add(new NotSameTeacherConstraint());
 
-		ScheduleSolver solver = new MRVForwardCheckingSolver(variables, constraints);
+		ScheduleSolver solver = new LCVForwardCheckingSolver(variables, constraints);
 		List<UniversityClass> res = solver.solve();
 		System.out.println("----------------------Algorithm ended successfully!--------------------");
 		System.out.println("RESULT: ");

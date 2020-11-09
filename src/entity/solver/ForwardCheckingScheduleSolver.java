@@ -89,7 +89,9 @@ public class ForwardCheckingScheduleSolver extends ScheduleSolver {
 		UniversityClass variable = this.variables.get(variableIndex);
 		System.out.println("Number of available slots for current variable: " + variable.getAvailableSlots().size());
 
-		for(ScheduleSlot value : variable.getAvailableSlots()){
+		while(!variable.getAvailableSlots().isEmpty()){
+			ScheduleSlot value = this.getValueToBeAssigned(variable);
+
 			int constraintsFailed = countFailedConstraints(value, variable);
 			if (constraintsFailed == 0){
 				variable.setScheduleSlot(value);
@@ -116,4 +118,10 @@ public class ForwardCheckingScheduleSolver extends ScheduleSolver {
 		}
 		return false;
 	}
+
+	@Override
+	protected ScheduleSlot getValueToBeAssigned(UniversityClass variable) {
+	    int index = random.nextInt(variable.getAvailableSlots().size());
+	 	return variable.getAvailableSlots().get(index);
+	 }
 }
