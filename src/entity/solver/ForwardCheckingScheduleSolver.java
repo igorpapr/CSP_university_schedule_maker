@@ -71,7 +71,7 @@ public class ForwardCheckingScheduleSolver extends ScheduleSolver {
 
 	@Override
 	public List<UniversityClass> solve() {
-		boolean res = backtrack();
+	 	boolean res = backtrack();
 		if (!res){
 			throw new RuntimeException("Couldn't solve the problem. Try fixing initial variables.");
 		}

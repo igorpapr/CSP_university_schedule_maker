@@ -127,12 +127,30 @@ public class UniversityClass {
 		return removedByForwardCheckingValuesMap;
 	}
 
+	/**
+	 * removes value from available values list
+	 * @param value to remove
+	 */
 	public void removeFromAvailableValues(ScheduleSlot value){
 		this.setAvailableSlots(
 				this.getAvailableSlots().stream().filter(
 						v -> !v.equals(value)).collect(Collectors.toList()
 				)
 		);
+	}
+
+	/**
+	 * Checks if there are any values that are conflicting by the time to the given value
+	 * @param value - given value
+	 * @return - True - if the conflicting by the time values are present in the available slots list
+	 */
+	public boolean checkPresenceOfRestrictingValues(ScheduleSlot value){
+		for (ScheduleSlot slot : availableSlots) {
+			return (!slot.classTime.equals(value.classTime) || slot.dayOfTheWeek.equals(value.dayOfTheWeek));
+			//if(slot.classTime.equals(value.classTime) && slot.dayOfTheWeek.equals(value.dayOfTheWeek))
+			//	return true;
+		}
+		return false;
 	}
 
 	@Override
