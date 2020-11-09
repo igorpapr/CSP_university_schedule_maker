@@ -73,10 +73,10 @@ public class Subject {
 
 	@Override
 	public String toString() {
-		return "Subject[" +
+		return "Subject [" +
 				"'" + name + '\'' +
-				", numberOfPracticesInAWeek=" + numberOfPracticesInAWeek +
-				", numberOfLections=" + numberOfLections +
-				"]\n";
+				", NumberOfPracticesInAWeek = " + numberOfPracticesInAWeek +
+				", numberOfLections = " + numberOfLections +
+				"]";
 	}
 }

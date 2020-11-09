@@ -1,9 +1,12 @@
 package entity;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 //means university class (a.k.a lesson)
 public class UniversityClass {
+
+	private final UUID uuid;
 
 	private Subject subject;
 
@@ -20,13 +23,17 @@ public class UniversityClass {
 	//The list of connected univ classes to the current by common teachers or students
 	private List<UniversityClass> neighbors;
 
+	private final Map<UUID, List<ScheduleSlot>> removedByForwardCheckingValuesMap;
+
 	public UniversityClass(Subject subject, boolean isLection, Teacher teacher, List<Student> students) {
+		this.uuid = UUID.randomUUID();
 		this.subject = subject;
 		this.isLection = isLection;
 		this.teacher = teacher;
 		this.students.addAll(students);
 		this.neighbors = new LinkedList<>();
 		this.availableSlots = new ArrayList<>();
+		this.removedByForwardCheckingValuesMap = new HashMap<>();
 	}
 
 	public List<ScheduleSlot> getAvailableSlots() {
@@ -73,6 +80,10 @@ public class UniversityClass {
 		return null;
 	}
 
+	public UUID getUuid() {
+		return uuid;
+	}
+
 	public boolean isLection() {
 		return isLection;
 	}
@@ -108,6 +119,22 @@ public class UniversityClass {
 		return this.scheduleSlot != null;
 	}
 
+	public void setStudents(HashSet<Student> students) {
+		this.students = students;
+	}
+
+	public Map<UUID, List<ScheduleSlot>> getRemovedByForwardCheckingValuesMap() {
+		return removedByForwardCheckingValuesMap;
+	}
+
+	public void removeFromAvailableValues(ScheduleSlot value){
+		this.setAvailableSlots(
+				this.getAvailableSlots().stream().filter(
+						v -> !v.equals(value)).collect(Collectors.toList()
+				)
+		);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -124,27 +151,25 @@ public class UniversityClass {
 
 	@Override
 	public int hashCode() {
-		return 31 * Objects.hash(subject, scheduleSlot, availableSlots, isLection, teacher, neighbors, students);
+		return Objects.hash(subject, scheduleSlot, availableSlots, isLection, teacher, students);
 	}
 
 	@Override
 	public String toString() {
-		String res = "==================\n" +
-				"Class[" +
-				subject;
+		String res =
+				"Lesson [\n" + (isLection ? " LECTION " : " PRACTICE ") + "\n"
+						+ subject;
 				if (this.scheduleSlot != null){
-
-				res += " | ClassTime=" + this.scheduleSlot.classTime;
-				res += " | DayOfTheWeek=" + this.scheduleSlot.dayOfTheWeek;
-				res += " | Classroom=" + this.scheduleSlot.classroom;
+					//res += " | ClassTime=" + this.scheduleSlot.classTime;
+					//res += " | DayOfTheWeek=" + this.scheduleSlot.dayOfTheWeek;
+					res += "\nClassroom = " + this.scheduleSlot.classroom;
 				}else {
 					res += " | {The value of time,day and classroom is not assigned yet}";
 				}
-				res += " | IsLection=" + isLection +
-				"\nTeacher=" + teacher +
-				"\nStudents: " + students +
-				"]\n" +
-				"=====================\n";
+				res +=
+						"\nTeacher: " + teacher +
+						"\nStudents: " + students +
+				"]";
 				return res;
 	}
 }

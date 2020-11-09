@@ -4,10 +4,7 @@ import entity.ScheduleSlot;
 import entity.UniversityClass;
 import entity.constraints.AbstractConstraint;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public abstract class ScheduleSolver {
@@ -17,18 +14,54 @@ public abstract class ScheduleSolver {
 	protected List<AbstractConstraint> constraints;
 
 	/**
-	 * A general function to start solving the problem
+	 * A general function to solve the problem
 	 */
-	public abstract void solve();
+	public abstract List<UniversityClass> solve();
 
 	/**
-	 * Chooses a value to the variable, checking all the constraints. Then assigns it.
-		@return - True if the value was successfully assigned
-	            - False if there's no available values left for the variable
+	 * A helper recursive function that assigns a value to the variable and does all needed checkings.
+	 * Implements backtracking algorithm.
+	 * Iterates through all available values for the current variable and checks if it's available.
+	 * If it is, this function is called by recursion.
+	 * If the call from the inner call returned false, then it tries another value.
+	 * @return - True if the assignment is complete, or the inner call of this function returned true.
+	 *         - False if the variable has no available values left.
 	 */
-	protected abstract boolean assignValue(UniversityClass variable);
+	protected abstract boolean backtrack();
 
+	/**
+	 * Deletes the value from all other variables since it is already assigned to another variable.
+	 * This method is used due to the given task. In the regular CSP implementation, this approach usually can not be used.
+	 * @param value - a value to be deleted
+	 */
+	protected void deleteSlotFromAll(ScheduleSlot value){
+		this.variables.forEach(
+			v -> v.setAvailableSlots(
+					v.getAvailableSlots().stream().filter(
+							s -> !s.equals(value)).collect(Collectors.toList())
+			)
+		);
+	}
 
-	//TODO maybe add returning mechanism
+	/**
+	 * Restores the value deleted before.
+	 * @param value - a value to be restored
+	 */
+	protected void restoreSlotForAll(ScheduleSlot value){
+		this.variables.forEach(v -> v.getAvailableSlots().add(value));
+	}
+
+	/**
+	 * Checks if the asssignment is complete. It means the end of the algorithm.
+	 * @return True if the assignment is complete.
+	 */
+	protected boolean isAssignmentComplete(){
+		for (UniversityClass variable: variables){
+			if (!variable.isAssigned()){
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

@@ -13,4 +13,12 @@ public class ScheduleSlot {
 		this.dayOfTheWeek = day;
 		this.classroom = classroom;
 	}
+
+	@Override
+	public String toString() {
+		return "[" + classTime +
+				", " + dayOfTheWeek +
+				", " + classroom +
+				']';
+	}
 }
