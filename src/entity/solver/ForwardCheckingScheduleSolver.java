@@ -2,11 +2,21 @@ package entity.solver;
 
 import entity.ScheduleSlot;
 import entity.UniversityClass;
+import entity.constraints.AbstractConstraint;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
-public abstract class ForwardCheckingScheduleSolver extends ScheduleSolver {
+public class ForwardCheckingScheduleSolver extends ScheduleSolver {
+
+	public ForwardCheckingScheduleSolver(List<UniversityClass> variables, List<AbstractConstraint> constraints)  {
+		this.variables = variables;
+		this.constraints = constraints;
+		this.initializeNeighbors();
+		this.random = new Random();
+	}
+
 	/**
 	 *  Initializes a neighbors list for every variable with the connected UniversityClasses.
 	 *  "Connected" in this context means having common students of teachers.
@@ -59,5 +69,51 @@ public abstract class ForwardCheckingScheduleSolver extends ScheduleSolver {
 			});
 	}
 
+	@Override
+	public List<UniversityClass> solve() {
+		boolean res = backtrack();
+		if (!res){
+			throw new RuntimeException("Couldn't solve the problem. Try fixing initial variables.");
+		}
+		return variables;
+	}
 
+	protected boolean backtrack(){
+		if (isAssignmentComplete())
+			return true;
+		int variableIndex = findIndexOfNextUnassignedVariableToBeProcessed();
+		assert variableIndex != -1;
+
+		System.out.println("--------------------------------------------------");
+		System.out.println("Processing variable with index " + variableIndex);
+		UniversityClass variable = this.variables.get(variableIndex);
+		System.out.println("Number of available slots for current variable: " + variable.getAvailableSlots().size());
+
+		for(ScheduleSlot value : variable.getAvailableSlots()){
+			int constraintsFailed = countFailedConstraints(value, variable);
+			if (constraintsFailed == 0){
+				variable.setScheduleSlot(value);
+				System.out.println("Setting slot: " + value);
+				deleteSlotFromAll(value);
+				deleteSimilarSlotsFromAllNeighbors(variable, value);
+				boolean res = backtrack(); //recursive call
+				if (res) {
+					return true;
+				}
+				System.out.println("Returned from recursive call with failure, current index: " + variableIndex );
+			} else{
+				System.out.println("Tried to assign the value: "+value+", but constraints failed: " + constraintsFailed);
+				//TODO handling of collisions in the schedule can be added inside this else block,
+				// but for our task we avoid this situation due
+				// to the low possibility of this situation in the real life and low amount of test data
+			}
+			//unassign the value
+			variable.setScheduleSlot(null);
+			restoreSlotForAll(value);
+			//delete it from current domain of available values
+			variable.removeFromAvailableValues(value);
+			restoreLastRemovedByFCValuesFromAllNeighbors(variable);
+		}
+		return false;
+	}
 }
